@@ -1,0 +1,963 @@
+@function calculateHalf($calculate) {
+    $result: $calculate / 2;
+    @return $result;
+}
+
+
+@mixin toggleAction($toggleType, $activeBgColor, $activeCircleColor, $disableBgColor, $width:60, $height:34, $specifyActiveColor: $activeCircleColor) {
+    @if($toggleType !="roundTypeSmallBtn"and $toggleType !="roundTypeSmallBtnGrad") {
+        &.switch {
+            position: relative;
+            display: inline-block;
+            width: $width+px;
+            height: $height+px;
+            $circleColor: $height - 10;
+
+            &>input[type=checkbox] {
+                &:focus {
+                    &+.slider {
+                        box-shadow: none;
+                        outline: none;
+                    }
+                }
+            }
+
+            &:focus {
+                box-shadow: none;
+                outline: none;
+            }
+
+            input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: $disableBgColor;
+                -webkit-transition: .4s;
+                transition: .4s;
+
+                &:focus {
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: ($circleColor)+px;
+                width: ($circleColor)+px;
+                left: 4px;
+                bottom: 50%;
+                transform: translate(0, 50%);
+                background-color: $activeCircleColor;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked+.slider {
+                background-color: $activeBgColor;
+            }
+
+            input:focus+.slider {
+                box-shadow: 0 0 1px $activeBgColor;
+            }
+
+            input:checked+.slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+                transform: translate(($width - ($circleColor + 10))+px, 50%);
+            }
+
+            @if($toggleType=="roundType") {
+
+                /* Rounded sliders */
+                .slider {
+                    border-radius: 34px;
+                }
+
+                .slider:before {
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    @else {
+
+        // ********** Background:
+        &.switch {
+            input {
+                display: none;
+            }
+
+            .slider {
+                position: relative;
+                $widthnew: #{$width}px;
+                $heightNew: #{$height}px;
+                width: rem($widthnew);
+                height: rem($heightNew);
+                display: inline-block;
+
+                // margin-left: 1em;
+                // ********** Switch:
+                &::after {
+                    position: absolute;
+                    content: '';
+                    width: #{rem(#{$width}px)};
+                }
+                height: #{rem(#{$width}px)};
+            }
+            top: 50%;
+            left: 0;
+            $ml: #{$width/2}px;
+            margin-left: -#{$ml};
+            $leftWidthValue: ($width/2)+1;
+            $leftValue: rem(#{$leftWidthValue}px);
+            margin-top: -#{rem($leftValue)};
+            border-radius: 50%;
+            transition: 250ms ease-in-out;
+        
+            @if($toggleType=="roundTypeSmallBtn") {
+                background: $specifyActiveColor;
+                box-shadow: none;
+            }
+    
+            @if($toggleType=="roundTypeSmallBtnGrad") {
+                background: linear-gradient($specifyActiveColor 10%, darken($specifyActiveColor, 10%));
+                box-shadow: 0 0.1em 0.15em -0.05em rgba(#fff, .9) inset, 0 0.2em 0.2em -0.12em rgba(#000, .5);
+            }
+
+        }
+
+        // ********** Channel:
+        &::before {
+            position: absolute;
+            content: '';
+            $leftValue: rem(#{$width/2}px);
+            width: calc(100% + #{$leftValue});
+            // margin-left: -1em;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 0.75em;
+            transition: 250ms ease-in-out;
+            background: linear-gradient(rgba(#000, 0.07), rgba(#fff, 0.1)), $disableBgColor;
+            box-shadow: 0 0.08em 0.15em -0.1em rgba(#000, .5) inset, 0 0.05em 0.08em -0.01em rgba(#fff, .7), 0 0 0 0 rgba($activeBgColor, .7) inset;
+        }
+    }
+
+    input:checked+.slider::before {
+        box-shadow: 0 0.08em 0.15em -0.1em rgba(#000, .5) inset, 0 0.05em 0.08em -0.01em rgba(#fff, .7), 3em 0 0 0 rgba($activeBgColor, 1) inset;
+        background: none;
+    }
+
+    input:checked+.slider::after {
+        $leftValue: rem(#{$width/2}px);
+        $widthCalculate: calc(100% + #{$leftValue});
+        left: $widthCalculate;
+        // margin-left: 1em;
+        margin-left: -#{$leftValue};
+        
+        @if($toggleType=="roundTypeSmallBtn") {
+            background: $activeCircleColor;
+            box-shadow: none;
+        }
+
+        @if($toggleType=="roundTypeSmallBtnGrad") {
+            background: linear-gradient($activeCircleColor 10%, darken($activeCircleColor, 10%));
+            box-shadow: 0 0.1em 0.15em -0.05em rgba(#fff, .9) inset, 0 0.2em 0.2em -0.12em rgba(#000, .5);
+        }
+    }
+
+    // **** ==== Slider v3 ==== **** //
+}
+
+@mixin toggleAction-Old($toggleType,$activeBgColor,$activeCircleColor,$disableBgColor,$width:60,$height:34){
+    @if($toggleType!="roundTypeSmallBtn" and $toggleType!="roundTypeSmallBtnGrad"){
+      &.switch
+      {
+        position: relative;
+        display: inline-block;
+        width: $width+px;
+        height: $height+px;
+        $circleColor: $height - 10;
+        & > input[type=checkbox]{
+          &:focus{
+            & + .slider{
+              box-shadow: none;
+              outline: none;
+            }
+          }
+        }
+        &:focus{
+          box-shadow: none;
+          outline: none;
+        }
+        input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: $disableBgColor;
+          -webkit-transition: .4s;
+          transition: .4s;
+          &:focus{
+            box-shadow: none;
+            outline: none;
+          }
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: ($circleColor)+px;
+          width: ($circleColor)+px;
+          left: 4px;
+          bottom: 50%;
+          transform: translate(0,50%);
+          background-color: $activeCircleColor;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+
+        input:checked + .slider {
+          background-color: $activeBgColor;
+        }
+
+        input:focus + .slider {
+          box-shadow: 0 0 1px $activeBgColor;
+        }
+
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+          transform: translate(($width - ($circleColor + 10))+px,50%);
+        }
+
+        @if($toggleType=="roundType"){
+          /* Rounded sliders */
+          .slider {
+            border-radius: 34px;
+          }
+
+          .slider:before {
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+    @else{
+      // ********** Background:
+      &.switch {
+        input{
+          display: none;
+        }
+        .slider
+        {
+          position: relative;
+          width: 4em;
+          height: 1.5em;
+          display: inline-block;
+          margin-left: 1em;
+          // ********** Switch:
+          &::after
+          {
+            position: absolute; content:'';
+            width: 2em; height: 2em;
+            top: 50%; left: 0;
+            margin-top: -1em;
+            border-radius: 50%;
+            transition: 250ms ease-in-out;
+            margin-left: -1em;
+            @if($toggleType=="roundTypeSmallBtn")
+            {
+              background: $activeCircleColor;
+              box-shadow: none;
+            }
+            @if($toggleType=="roundTypeSmallBtnGrad"){
+              background: linear-gradient($activeCircleColor 10%,darken($activeCircleColor,10%));
+              box-shadow:
+                0 0.1em 0.15em -0.05em rgba(#fff,.9
+                ) inset,
+                0 0.2em 0.2em -0.12em rgba(#000,.5);
+            }
+          }
+          // ********** Channel:
+          &::before
+          {
+            position: absolute;
+            content:'';
+            width: calc(100% + 1em);margin-left: -1em; height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 0.75em;
+            transition: 250ms ease-in-out;
+            background: linear-gradient(rgba(#000,0.07),rgba(#fff,0.1)),$disableBgColor;
+            box-shadow:
+            0 0.08em 0.15em -0.1em rgba(#000,.5) inset,
+            0 0.05em 0.08em -0.01em rgba(#fff,.7),
+              0 0 0 0 rgba($activeBgColor,.7) inset;
+          }
+        }
+        input:checked + .slider::before {
+          box-shadow:
+            0 0.08em 0.15em -0.1em rgba(#000,.5) inset,
+            0 0.05em 0.08em -0.01em rgba(#fff,.7),
+            3em 0 0 0 rgba($activeBgColor,1) inset;
+          background: none;
+        }
+
+        input:checked + .slider::after {
+          left: 2em;
+          // margin-left: 1em;
+          margin-left: 0;
+        }
+        // **** ==== Slider v3 ==== **** //
+      }
+    }
+
+  }
+@mixin toggleActionOld($toggleType, $activeBgColor, $activeCircleColor, $disableBgColor, $width:60, $height:34) {
+    @if($toggleType!="roundTypeSmallBtn" and $toggleType!="roundTypeSmallBtnGrad") {
+        &.switch {
+            position: relative;
+            display: inline-block;
+            width: $width+px;
+            height: $height+px;
+            $circleColor: $height - 10;
+            &>input[type=checkbox] {
+                &:focus {
+                    &+.slider {
+                        box-shadow: none;
+                        outline: none;
+                    }
+                }
+            }
+            &:focus {
+                box-shadow: none;
+                outline: none;
+            }
+            input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: $disableBgColor;
+                -webkit-transition: .4s;
+                transition: .4s;
+                &:focus {
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: ($circleColor)+px;
+                width: ($circleColor)+px;
+                left: 4px;
+                bottom: 50%;
+                transform: translate(0, 50%);
+                background-color: $activeCircleColor;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+            input:checked+.slider {
+                background-color: $activeBgColor;
+            }
+            input:focus+.slider {
+                box-shadow: 0 0 1px $activeBgColor;
+            }
+            input:checked+.slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+                transform: translate(($width - ($circleColor + 10))+px, 50%);
+            }
+            @if($toggleType=="roundType") {
+                /* Rounded sliders */
+                .slider {
+                    border-radius: 34px;
+                }
+                .slider:before {
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    @else {
+        // ********** Background:
+        &.switch {
+            input {
+                display: none;
+            }
+            .slider {
+                position: relative;
+                width: 4em;
+                height: 1.5em;
+                display: inline-block;
+                margin-left: 1em;
+                // ********** Switch:
+                &::after {
+                    position: absolute;
+                    content: '';
+                    width: 2em;
+                    height: 2em;
+                    top: 50%;
+                    left: 0;
+                    margin-top: -1em;
+                    border-radius: 50%;
+                    transition: 250ms ease-in-out;
+                    margin-left: -1em;
+                    @if($toggleType=="roundTypeSmallBtn") {
+                        background: $activeCircleColor;
+                        box-shadow: none;
+                    }
+                    @if($toggleType=="roundTypeSmallBtnGrad") {
+                        background: linear-gradient($activeCircleColor 10%, darken($activeCircleColor, 10%));
+                        box-shadow: 0 0.1em 0.15em -0.05em rgba(#fff, .9) inset, 0 0.2em 0.2em -0.12em rgba(#000, .5);
+                    }
+                }
+                // ********** Channel:
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: calc(100% + 1em);
+                    margin-left: -1em;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    border-radius: 0.75em;
+                    transition: 250ms ease-in-out;
+                    background: linear-gradient(rgba(#000, 0.07), rgba(#fff, 0.1)), $disableBgColor;
+                    box-shadow: 0 0.08em 0.15em -0.1em rgba(#000, .5) inset, 0 0.05em 0.08em -0.01em rgba(#fff, .7), 0 0 0 0 rgba($activeBgColor, .7) inset;
+                }
+            }
+            input:checked+.slider::before {
+                box-shadow: 0 0.08em 0.15em -0.1em rgba(#000, .5) inset, 0 0.05em 0.08em -0.01em rgba(#fff, .7), 3em 0 0 0 rgba($activeBgColor, 1) inset;
+                background: none;
+            }
+            input:checked+.slider::after {
+                left: 2em;
+                // margin-left: 1em;
+                margin-left: 0;
+            }
+            // **** ==== Slider v3 ==== **** //
+        }
+    }
+}
+@mixin downArrow($border-width, $border-color) {
+    $border-width-half: calculateHalf($border-width);
+    position: absolute !important;
+    top: 50%;
+    right: 8px;
+    margin-top: -$border-width-half+px;
+    border: $border-width+px solid $border-color;
+    border-left: $border-width+px solid transparent;
+    border-right: $border-width+px solid transparent;
+    border-bottom: $border-width+px solid transparent;
+}
+@mixin buttonCommon($bgcolor, $frontcolor, $type, $borderType:null) {
+    background: linear-gradient(60deg, lighten($bgcolor, 10%), darken($bgcolor, 6%));
+    border-color: $bgcolor!important;
+    text-transform: none!important;
+    color: $frontcolor;
+    padding: 5px 12px !important;
+    font-size: 0.875rem !important;
+    border: 2px solid $bgcolor;
+    cursor: pointer;
+    @if($borderType=='rounded') {
+        border-radius: 50px !important;
+    }
+
+    @else {
+        border-radius: 3px !important;
+    }
+
+    @if($type=='bordered') {
+        &:hover,
+        &:active,
+        &:not(:disabled):not(.disabled).active,
+        &:not(:disabled):not(.disabled):active {
+            border-color: $bgcolor!important;
+            background: $frontcolor !important;
+            color: $bgcolor !important;
+            text-transform: none!important;
+            border: 2px solid $bgcolor;
+        }
+    }
+
+    @else {
+        &:hover,
+        &:active,
+        &:not(:disabled):not(.disabled).active,
+        &:not(:disabled):not(.disabled):active {
+            text-transform: none!important;
+            // box-shadow: 1px 3px 5px darken($bgcolor,30);
+            box-shadow: 0px 2px 4px darken($bgcolor, 30);
+            background: $bgcolor;
+            text-decoration: none !important;
+            color: $frontcolor !important;
+        }
+    }
+
+    &:focus {
+        box-shadow: none;
+        outline: none;
+    }
+}
+@mixin customSelect($selectBoxBgColor, $color, $type, $size) {
+    $topMargin: calculateHalf($size);
+    $marginHalf: $topMargin;
+    $topMargin: $topMargin + 2;
+    $topMargin: $topMargin+px;
+    background-color: $selectBoxBgColor;
+    &:focus {
+        display: block;
+    }
+
+    position: relative;
+    display: inline-block;
+    /*&:focus-within{
+    &:before{
+      transform: rotate(180deg);
+      top: auto;
+      margin-top: auto;
+      bottom: 50%;
+      margin-bottom: -$topMargin;
+    }
+    &:after{
+      transform: rotate(180deg);
+      bottom: 50%;
+      margin-bottom: -$marginHalf+px;
+      top: auto;
+      margin-top: auto;
+    }
+  }*/
+
+    &:after {
+        content: "";
+        @include downArrow($size, $color);
+        pointer-events: none;
+        z-index: 8;
+    }
+
+    @if($type=='border') {
+        &:before {
+            content: "";
+            @include downArrow($size, $selectBoxBgColor);
+            pointer-events: none;
+            margin-top: -$topMargin;
+            z-index: 9;
+        }
+    }
+
+    select {
+        background-color: $selectBoxBgColor;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* Add some styling */
+        padding: 5px 50px 5px 10px;
+        border: 1px solid $color;
+        border-radius: 3px;
+        &:focus {
+            box-shadow: none;
+            outline: none;
+        }
+        &::-ms-expand {
+            display: none;
+        }
+    }
+}
+@mixin radioBtn($normalBgColor, $checkedColor, $mouseOverBgColor, $dotColor, $width, $height) {
+    $halfHeight: calculateHalf($height);
+    $dotsHalfHeight: calculateHalf($halfHeight);
+    $halfWidth: calculateHalf($width);
+    $dotsHalfWidth: calculateHalf($halfWidth);
+    $marginTop: $halfHeight;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    & {
+        padding-left: ($width+7)+px;
+        margin-right: 20px;
+        margin-bottom: 12px;
+        font-size: 0.875rem;
+    }
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    /* Create a custom radio button */
+
+    .checkmark {
+        position: absolute;
+        top: 50%;
+        margin-top: -$marginTop+px;
+        left: 0;
+        height: $width+px;
+        width: $height+px;
+        background-color: $normalBgColor;
+        border-radius: 50%;
+    }
+    /* On mouse-over, add a grey background color */
+
+    &:hover input~.checkmark {
+        background-color: $mouseOverBgColor;
+    }
+    /* When the radio button is checked, add a blue background */
+
+    input:checked~.checkmark {
+        background-color: $checkedColor;
+    }
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* Show the indicator (dot/circle) when checked */
+
+    input:checked~.checkmark:after {
+        display: block;
+    }
+    /* Style the indicator (dot/circle) */
+
+    .checkmark:after {
+        top: 50%;
+        margin-top: -$dotsHalfHeight+px;
+        left: 50%;
+        margin-left: -$dotsHalfWidth+px;
+        width: $halfHeight+px;
+        height: $halfWidth+px;
+        border-radius: 50%;
+        background: $dotColor;
+    }
+}
+@mixin checkboxBtn($normalBgColor, $checkedColor, $mouseOverBgColor, $dotColor, $width, $height) {
+    $halfwidth: calculateHalf($width) - 3;
+    $halfhalfwidth: $halfwidth / 2;
+    $halfheight: calculateHalf($height) + 3;
+    $halfhalfheight: $halfheight / 2;
+    $halfHeight: calculateHalf($height);
+    $marginTop: $halfHeight;
+    & {
+        display: block;
+        position: relative;
+        padding-left: ($width+7)+px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            &:checked {
+                &~.checkmark {
+                    background-color: $checkedColor;
+                    &:after {
+                        display: block;
+                    }
+                }
+            }
+            &~.checkmark {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                height: $width+px;
+                width: $height+px;
+                margin-top: -$marginTop+px;
+                background-color: $mouseOverBgColor;
+                &:after {
+                    content: "";
+                    position: absolute;
+                    display: none;
+                    margin-left: -$halfhalfwidth+px;
+                    left: 50%;
+                    top: 5px;
+                    margin-top: -4.5px;
+                    width: $halfwidth+px;
+                    height: $halfheight+px;
+                    border: solid $dotColor;
+                    border-width: 0 3px 3px 0;
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                }
+            }
+        }
+        &:hover {
+            input~.checkmark {
+                background-color: $mouseOverBgColor;
+            }
+        }
+    }
+}
+@mixin getTableData($getRecord) {
+    @media only screen and (max-width: 991px) {
+        $returnValue: length($getRecord);
+        @for $i from 1 through $returnValue {
+            td:nth-of-type(#{$i}):before {
+                content: nth($getRecord, $i);
+            }
+        }
+        /*
+        Label the data
+        */
+    }
+
+    @media screen and (max-width: 991px) {
+        $margin: 1rem;
+        & {
+            /* Force table to not be like tables anymore */
+            &,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+            table {
+                padding: 15px;
+                /* Hide table headers (but not display: none;, for accessibility) */
+                thead {
+                    tr {
+                        position: absolute;
+                        top: -9999px;
+                        left: -9999px;
+                    }
+                }
+                tbody {
+                    tr {
+                        border: 1px solid #ccc;
+                        margin-bottom: 20px;
+                        // width: calc(50% - #{$margin});
+                        width: 100%;
+                        margin-right: 0;
+                        display: inline-block;
+                        // margin-right: $margin;
+                        vertical-align: top;
+                        td {
+                            /* Behave  like a "row" */
+                            border: none;
+                            border-bottom: 1px solid #eee;
+                            position: relative;
+                            padding: 1rem 1rem 1rem 40%;
+                            &:before {
+                                /* Now like a table header */
+                                position: absolute;
+                                /* Top/left values mimic padding */
+                                top: 1rem;
+                                left: 15px;
+                                width: 35%;
+                                padding-right: 10px;
+                                white-space: nowrap;
+                            }
+                        }
+                        &:nth-of-type(odd) {
+                            background-color: #fff;
+                        }
+                        &:nth-of-type(even) {
+                            background-color: #fff;
+                            // margin-right: 0;
+                            // margin-left: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@mixin getTableDataColumn($getRecord) {
+    @media only screen and (max-width: 991px) {
+        $returnValue: length($getRecord);
+        @for $i from 1 through $returnValue {
+            tr:nth-of-type(#{$i}):before {
+                content: nth($getRecord, $i);
+                padding: 10px;
+                display: inline-block;
+                font-size: 20px;
+                width: 100%;
+                border-bottom: 1px solid #CDCDCD;
+                font-weight: bold;
+            }
+        }
+        /*
+    Label the data
+    */
+    }
+
+    @media screen and (max-width: 991px) {
+        $margin: 1rem;
+        /* Force table to not be like tables anymore */
+        &,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+        }
+        & {
+            padding: 15px;
+            /* Hide table headers (but not display: none;, for accessibility) */
+            thead {
+                tr {
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+            }
+            tbody {
+                tr {
+                    border: 1px solid #CCC;
+                    margin-bottom: 20px;
+                    // width: calc(50% - #{$margin});
+                    width: 100%;
+                    margin-right: 0;
+                    display: inline-block;
+                    // margin-right: $margin;
+                    vertical-align: top;
+                    td {
+                        /* Behave like a "row" */
+                        border: none;
+                        // border-bottom: 1px solid #EEE;
+                        position: relative;
+                        padding: 1rem 1rem 1rem 1rem;
+                        text-align: left;
+                        &:before {
+                            /* Now like a table header */
+                            position: absolute;
+                            /* Top/left values mimic padding */
+                            top: 1rem;
+                            left: 15px;
+                            width: 35%;
+                            padding-right: 10px;
+                            white-space: nowrap;
+                        }
+                    }
+                    &:nth-of-type(odd) {
+                        background-color: black;
+                    }
+                    &:nth-of-type(even) {
+                        background-color: black;
+                        // margin-right: 0;
+                        // margin-left: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/***************Media Queries and Custom Media query Designs Start*********************/
+@mixin responsive($deviceType, $enddeviceWidth: null, $startdeviceWidth: null) {
+    @if($deviceType=="xs") {
+        @media (max-width: 576px) {
+            @content;
+        }
+    }
+
+    @else if($deviceType=="sm") {
+        @media (max-width: 767px) {
+            @content;
+        }
+    }
+
+    @else if($deviceType=="md") {
+        @media (max-width: 992px) {
+            @content;
+        }
+    }
+
+    @else if($deviceType=="lg") {
+        @media (max-width: 1199px) {
+            @content;
+        }
+    }
+
+    @else if($deviceType=="xl") {
+        @content;
+    }
+
+    @else if($deviceType=="customDevice") {
+        @if($startdeviceWidth==null and $enddeviceWidth==null) {
+            @media screen and (min-width: $startdeviceWidth) and (max-width: $enddeviceWidth) {
+                @content;
+            }
+        }
+        @else if($startdeviceWidth!=null and $enddeviceWidth==null) {
+            @media screen and (min-width: $startdeviceWidth) {
+                @content;
+            }
+        }
+        @else {
+            @media (max-width: $enddeviceWidth) {
+                @content;
+            }
+        }
+    }
+}
+
+/***************Media Queries and Custom Media query Designs End*********************/
+
+/******Calculate the luminance for a color start********/
+@function set-button-text-color($color) {
+    @if (lightness( $color) > 50) {
+        @return #333;
+    }
+
+    @else {
+        @return #fafafa;
+    }
+}
+@function set-navbar-bg-color($color) {
+    @if (lightness( $color) > 50) {
+        @return #343a40;
+    }
+
+    @else {
+        @return #fff;
+    }
+}
+
+/******Calculate the luminance for a color end********/

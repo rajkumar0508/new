@@ -1,0 +1,84 @@
+.customSelect {
+    &.borderArrow {
+        @include customSelect(#fff, #ced4da, 'border', 10);
+        select {
+            height: auto;
+            padding: 6px 50px 6px 10px;
+        }
+    }
+    &.fullArrow {
+        @include customSelect(#fff, #ced4da, 'full', 10);
+        select {
+            height: auto;
+            padding: 6px 50px 6px 10px;
+        }
+    }
+    width: 100%;
+}
+/************Data table*******************************/
+.dataTables_wrapper {
+    .dataTable {
+        thead {
+            tr {
+                background: linear-gradient(60deg, lighten($theme-color, 10%), darken($theme-color, 6%));
+                color: set-button-text-color(darken($theme-color, 6%));
+            }
+        }
+    }
+    .dataTables_paginate {
+        .page-item {
+            &.active {
+                .page-link {
+                    color: set-button-text-color(darken($theme-color, 6%));
+                    background: linear-gradient(60deg, lighten($theme-color, 10%), darken($theme-color, 6%));
+                    border-color: darken($theme-color, 6%);
+                }
+            }
+            .page-link {
+                color: darken($theme-color, 6%);
+                border-color: darken($theme-color, 6%);
+                &:hover {
+                    background: linear-gradient(60deg, lighten($theme-color, 2%), darken($theme-color, 1%));
+                    color: set-button-text-color(darken($theme-color, 6%));
+                }
+                &:focus {
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+.popup_modal_box{
+    flex-wrap: wrap;
+    .filed-box{
+        input{
+            border-bottom: 1px solid #000 !important;
+            border: 0;
+            border-radius: 0;
+        }
+       
+    }
+}
+.images-view{
+    figure{
+        position: relative;
+        width: 890px;
+        height: 721px;
+        img{
+            width: 100%;
+            position: absolute;
+            height: 100%;
+            object-fit: cover;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+        }
+    }
+}
